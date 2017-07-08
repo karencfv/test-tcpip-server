@@ -8,7 +8,7 @@ fi
 sudo apt-get -y update
 
 # Install necessary dependencies for rbenv and ruby
-sudo apt-get -y install autoconf bison git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libncurses5-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev python-software-properties libffi-dev libgdbm3 libgdbm-dev <<EOF
+sudo apt-get -y install autoconf bison git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libncurses5-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev python-software-properties libffi-dev libgdbm3 libgdbm-dev vim<<EOF
 Y
 EOF
 
