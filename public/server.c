@@ -6,6 +6,10 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <sys/wait.h>
+#include <errno.h>
+#include <signal.h>
+#include <netdb.h>
 
 void error(const char *msg)
 {
@@ -17,8 +21,8 @@ int main(int argc, char *argv[])
 {
   int socket_fd, client_socket_fd, port_no, n;
   socklen_t client_len;
-  char buffer[256];
   struct sockaddr_in serv_addr, cli_addr;
+  char buffer[256];
 
   if (argc < 2)
   {
@@ -44,7 +48,7 @@ int main(int argc, char *argv[])
 
   serv_addr.sin_port = htons(port_no);
 
-  if (bind(socket_fd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
+  if (bind(socket_fd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) == -1)
     error("Error on binding");
 
   listen(socket_fd, 5);
@@ -53,7 +57,7 @@ int main(int argc, char *argv[])
 
   client_socket_fd = accept(socket_fd, (struct sockaddr *) &cli_addr, &client_len);
 
-  if (client_socket_fd < 0)
+  if (client_socket_fd == -1)
     error("Error on accept");
 
   printf("I've connected from %s port %d!\n",
@@ -66,7 +70,7 @@ int main(int argc, char *argv[])
     memset(buffer, 0, 256);
 
     n = read(client_socket_fd, buffer, 256);
-    if (n < 0)
+    if (n == -1)
       error("Error reading from socket");
 
     printf("Client says: %s\n", buffer);

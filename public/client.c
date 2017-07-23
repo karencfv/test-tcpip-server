@@ -6,6 +6,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <errno.h>
+#include <arpa/inet.h>
 
 void error(const char *msg)
 {
@@ -52,7 +54,7 @@ int main(int argc, char *argv[])
 
   serv_addr.sin_port = htons(port_no);
 
-  if (connect(socket_fd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
+  if (connect(socket_fd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) == -1)
     error("Error connecting");
 
   while (1)
@@ -64,13 +66,13 @@ int main(int argc, char *argv[])
     fgets(buffer, 256, stdin);
 
     n = write(socket_fd, buffer, strlen(buffer));
-    if (n < 0)
+    if (n == -1)
       error("Error writing to socket");
 
     memset(buffer, 0, 256);
 
     n = read(socket_fd, buffer, 256);
-    if (n < 0)
+    if (n == -1)
       error("Error reading from socket");
     printf("%s\n", buffer);
   }
