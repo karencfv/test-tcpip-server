@@ -19,7 +19,7 @@ void error(const char *msg)
 
 int main(int argc, char *argv[])
 {
-  int socket_fd, client_socket_fd, port_no, n;
+  int socket_fd, client_socket_fd, port_no, n, pid;
   socklen_t client_len;
   struct sockaddr_in serv_addr, cli_addr;
   char buffer[256];
@@ -55,16 +55,21 @@ int main(int argc, char *argv[])
 
   client_len = sizeof(cli_addr);
 
+  while (1)
+  {
   client_socket_fd = accept(socket_fd, (struct sockaddr *) &cli_addr, &client_len);
 
   if (client_socket_fd == -1)
     error("Error on accept");
 
   printf("I've connected from %s port %d!\n",
-         inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port));
+           inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port));
 
-  while (1)
-  {
+  pid = fork();
+
+  if (pid == -1)
+    error("Error on fork");
+
     send(client_socket_fd, "I'm the server, ack!\n", 24, 0);
 
     memset(buffer, 0, 256);
