@@ -53,6 +53,8 @@ int main(int argc, char *argv[])
 
   listen(socket_fd, 5);
 
+  printf("I'm a lonely server :( pls connect\n");
+
   client_len = sizeof(cli_addr);
 
   while (1)
