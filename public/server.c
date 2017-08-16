@@ -57,21 +57,21 @@ int main(int argc, char *argv[])
 
   client_len = sizeof(cli_addr);
 
-  while (1)
-  {
-    client_socket_fd = accept(socket_fd, (struct sockaddr *) &cli_addr, &client_len);
+  pid = fork();
 
-    if (client_socket_fd == -1)
+  if (pid == -1)
+    error("Error on fork");
+
+  client_socket_fd = accept(socket_fd, (struct sockaddr *) &cli_addr, &client_len);
+
+  if (client_socket_fd == -1)
     error("Error on accept");
 
-    printf("I've connected from %s port %d!\n",
-           inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port));
+  printf("I've connected from %s port %d!\n",
+         inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port));
 
-    pid = fork();
-
-    if (pid == -1)
-      error("Error on fork");
-
+  while (1)
+  {
     send(client_socket_fd, "I'm the server, ack!\n", 24, 0);
 
     memset(buffer, 0, 256);
