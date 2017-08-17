@@ -19,10 +19,11 @@ void error(const char *msg)
 
 int main(int argc, char *argv[])
 {
-  int socket_fd, client_socket_fd, port_no, n, pid;
+  int socket_fd, client_socket_fd, port_no, n, pid, port;
   socklen_t client_len;
   struct sockaddr_in serv_addr, cli_addr;
   char buffer[256];
+  char*  ip;
 
   if (argc < 2)
   {
@@ -67,8 +68,11 @@ int main(int argc, char *argv[])
   if (client_socket_fd == -1)
     error("Error on accept");
 
+  ip = inet_ntoa(cli_addr.sin_addr);
+  port = ntohs(cli_addr.sin_port);
+
   printf("I've connected from %s port %d!\n",
-         inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port));
+         ip, port);
 
   while (1)
   {
@@ -80,7 +84,7 @@ int main(int argc, char *argv[])
     if (n == -1)
       error("Error reading from socket");
 
-    printf("Client says: %s\n", buffer);
+    printf("%s:%d says: %s\n", ip, port, buffer);
   }
 
   close(client_socket_fd);
